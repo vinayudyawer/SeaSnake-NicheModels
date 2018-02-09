@@ -3,7 +3,7 @@ library(leaflet)
 library(raster)
 library(htmlwidgets)
 
-r<-stack(list.files("~/Desktop/MaxEntModels", full.names = T)); projection(r)<-CRS("+proj=longlat +datum=WGS84")
+r<-stack(list.files("~/Documents/GitHub/SeaSnake-NicheModels/Data/Rasters", full.names = T)); projection(r)<-CRS("+proj=longlat +datum=WGS84")
 
 p1 <- colorNumeric(c("steelblue2","gold", "red"), values(r[[1]]),na.color = "transparent")
 p2 <- colorNumeric(c("steelblue2","gold", "red"), values(r[[2]]),na.color = "transparent")
