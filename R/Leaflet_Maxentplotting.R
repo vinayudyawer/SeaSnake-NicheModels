@@ -21,6 +21,10 @@ p3 <- colorNumeric(c("steelblue2","gold", "red"), values(r[[3]]),na.color = "tra
 p4 <- colorNumeric(c("steelblue2","gold", "red"), values(r[[4]]),na.color = "transparent")
 p5 <- colorNumeric(c("steelblue2","gold", "red"), values(r[[5]]),na.color = "transparent")
 
+rad=10
+op=0.5
+wt= 10
+  
 maxentmap<-
   
   leaflet() %>% addTiles() %>%
@@ -28,15 +32,15 @@ maxentmap<-
   addProviderTiles(providers$Esri.WorldImagery, group = "Satellite") %>%
   
   addRasterImage(r[[1]], colors = p1, group="A. apraefrontalis", opacity = 0.7) %>%
-  addCircles(lat=ap$lat, lng=ap$lon, opacity=0.5, color=1, group="A. apraefrontalis") %>%
+  addCircles(lat=ap$lat, lng=ap$lon, radius= rad, weight=wt, opacity=op, color=1, group="A. apraefrontalis") %>%
   addRasterImage(r[[2]], colors = p2, group="A. foliosquama", opacity = 0.7) %>%
-  addCircles(lat=fo$lat, lng=fo$lon, opacity=0.5, color=1, group="A. foliosquama") %>%
+  addCircles(lat=fo$lat, lng=fo$lon, radius= rad, weight=wt, opacity=op, color=1, group="A. foliosquama") %>%
   addRasterImage(r[[3]], colors = p3, group="A. fuscus",  opacity = 0.7) %>%
-  addCircles(lat=fu$lat, lng=fu$lon, opacity=0.5, color=1, group="A. fuscus") %>%
+  addCircles(lat=fu$lat, lng=fu$lon, radius= rad, weight=wt, opacity=op, color=1, group="A. fuscus") %>%
   addRasterImage(r[[4]], colors = p4, group="A. pooleorum", opacity = 0.7) %>%
-  addCircles(lat=po$lat, lng=po$lon, opacity=0.5, color=1, group="A. pooleorum") %>%
+  addCircles(lat=po$lat, lng=po$lon, radius= rad, weight=wt, opacity=op, color=1, group="A. pooleorum") %>%
   addRasterImage(r[[5]], colors = p5, group="A. tenuis", opacity = 0.7) %>%
-  addCircles(lat=te$lat, lng=te$lon, opacity=0.5, color=1, group="A. tenuis") %>%
+  addCircles(lat=te$lat, lng=te$lon, radius= rad, weight=wt, opacity=op, color=1, group="A. tenuis") %>%
   
   addLayersControl(
     #baseGroups = c("Map","Satellite"),
