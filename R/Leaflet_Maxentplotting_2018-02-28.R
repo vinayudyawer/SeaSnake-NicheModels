@@ -1,4 +1,4 @@
-
+library(tidyverse)
 library(leaflet)
 library(maptools)
 library(raster)
@@ -8,7 +8,7 @@ library(htmlwidgets)
 r<-stack(list.files("~/Documents/GitHub/SeaSnake-NicheModels/Data/Rasters", full.names = T)); projection(r)<-CRS("+proj=longlat +datum=WGS84")
 poly<-readShapeSpatial("~/Dropbox/Manuscripts/15. WA BRUVS/Data/WA rasters/NWMR/NWShelf.shp", proj4string = CRS("+proj=longlat +datum=WGS84"))
 
-data<-read.csv("~/Dropbox/Manuscripts/18. Ru SS Modelling/Data/Occurence/SS_occ_master2.csv")
+data<-read_csv("Data/SS_occurences_2018-02-28.csv")
 data<-rbind(data, data.frame(source=c("ala"), lat=c(-18.01), lon=c(122.16), date=c("1988-04-01"), count=c(1), species=c("tenuis"), genus=c("Aipysurus")))
 data<-data[!data$source%in%"Ru_dataset",]
 data[data$source%in%"ala","lab"]<-"Atlas of Living Australia"
