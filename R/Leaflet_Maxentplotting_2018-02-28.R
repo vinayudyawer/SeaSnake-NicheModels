@@ -8,15 +8,17 @@ library(htmlwidgets)
 r<-stack(list.files("Data/Rasters", full.names = T)); projection(r)<-CRS("+proj=longlat +datum=WGS84")
 poly<-readShapeSpatial("Data/NWMR/NWShelf.shp", proj4string = CRS("+proj=longlat +datum=WGS84"))
 
-data<-read_csv("Data/SS_occurences_2018-02-28.csv")
-coordinates(data)<-c("Longitude", "Latitude"); projection(data)<-CRS("+proj=longlat +datum=WGS84")
+all<-read.csv("Data/SS_occurences_2018-02-28.csv")
+coordinates(all)<-c("Longitude", "Latitude"); projection(all)<-CRS("+proj=longlat +datum=WGS84")
 
-all<-gIntersection(data, poly)
-ap<-data[data$species%in%"apraefrontalis",]; #apr<-rasterToPoints(rasterize(ap, r, field=1), spatial=T); apr@data[,"species"]<-"apr"
-fo<-data[data$species%in%"foliosquama",]; #fol<-rasterToPoints(rasterize(fo, r, field=1), spatial=T); fol@data[,"species"]<-"fol"
-fu<-data[data$species%in%"fuscus",]; #fus<-rasterToPoints(rasterize(fu, r, field=1), spatial=T); fus@data[,"species"]<-"fus"
-po<-data[data$species%in%"pooleorum",]; #poo<-rasterToPoints(rasterize(po, r, field=1), spatial=T); poo@data[,"species"]<-"poo"
-te<-data[data$species%in%"tenuis" & data$source%in%c("ala","Survey_Kate"),]; #ten<-rasterToPoints(rasterize(te, r, field=1), spatial=T); ten@data[,"species"]<-"ten"
+#data<-gIntersection(all, poly)
+data<- all[poly,]
+
+ap<-data[data$species%in%"apraefrontalis",]
+fo<-data[data$species%in%"foliosquama",]
+fu<-data[data$species%in%"fuscus",]
+po<-data[data$species%in%"pooleorum",]
+te<-data[data$species%in%"tenuis",]
 
 p0 <- colorNumeric(c("steelblue2","gold", "red"), values(r[[6]]),na.color = "transparent")
 p1 <- colorNumeric(c("steelblue2","gold", "red"), values(r[[1]]),na.color = "transparent")
@@ -40,23 +42,58 @@ maxentmap<-
   
   addRasterImage(r[[1]], colors = p1, group="A. apraefrontalis", opacity = 0.7) %>%
   addCircleMarkers(lat=ap$lat, lng=ap$lon, radius= rad, weight=wt, opacity=op, color=1, group="A. apraefrontalis", fillOpacity=op, 
-                   popup=paste("source =",ap$lab)) %>%
+                   popup=paste(sep="", 
+                               "<b><i>Aipysurus apraefrontalis</i></b> <br/>",
+                               "Source: ", ap$Source, "<br/>",
+                               "ID: ", ap$ID, "<br/>",
+                               "Record Type: ", ap$Record.Type, "<br/>",
+                               "Collector: ", ap$Collector, "<br/>",
+                               "Date collected: ", ap$Date.collected, "<br/>",
+                               "Sex: ", ap$Sex, "<br/>")) %>%
   addRasterImage(r[[2]], colors = p2, group="A. foliosquama", opacity = 0.7) %>%
   addCircleMarkers(lat=fo$lat, lng=fo$lon, radius= rad, weight=wt, opacity=op, color=1, group="A. foliosquama", fillOpacity = op, 
-                   popup=paste("source =",fo$lab)) %>%
+                   popup=paste(sep="", 
+                               "<b><i>Aipysurus foliosquama</i></b> <br/>",
+                               "Source: ", fo$Source, "<br/>",
+                               "ID: ", fo$ID, "<br/>",
+                               "Record Type: ", fo$Record.Type, "<br/>",
+                               "Collector: ", fo$Collector, "<br/>",
+                               "Date collected: ", fo$Date.collected, "<br/>",
+                               "Sex: ", fo$Sex, "<br/>")) %>%
   addRasterImage(r[[3]], colors = p3, group="A. fuscus",  opacity = 0.7) %>%
   addCircleMarkers(lat=fu$lat, lng=fu$lon, radius= rad, weight=wt, opacity=op, color=1, group="A. fuscus", fillOpacity = op, 
-                   popup=paste("source =",fu$lab)) %>%
-  addRasterImage(r[[4]], colors = p4, group="A. pooleorum", opacity = 0.7) %>%
-  addCircleMarkers(lat=po$lat, lng=po$lon, radius= rad, weight=wt, opacity=op, color=1, group="A. pooleorum", fillOpacity = op, 
-                   popup=paste("source =",po$lab)) %>%
+                   popup=paste(sep="", 
+                               "<b><i>Aipysurus fuscus</i></b> <br/>",
+                               "Source: ", fu$Source, "<br/>",
+                               "ID: ", fu$ID, "<br/>",
+                               "Record Type: ", fu$Record.Type, "<br/>",
+                               "Collector: ", fu$Collector, "<br/>",
+                               "Date collected: ", fu$Date.collected, "<br/>",
+                               "Sex: ", fu$Sex, "<br/>")) %>%
+  addRasterImage(r[[4]], colors = p4, group="A. l. pooleorum", opacity = 0.7) %>%
+  addCircleMarkers(lat=po$lat, lng=po$lon, radius= rad, weight=wt, opacity=op, color=1, group="A. l. pooleorum", fillOpacity = op, 
+                   popup=paste(sep="", 
+                               "<b><i>Aipysurus laevis pooleorum</i></b> <br/>",
+                               "Source: ", po$Source, "<br/>",
+                               "ID: ", po$ID, "<br/>",
+                               "Record Type: ", po$Record.Type, "<br/>",
+                               "Collector: ", po$Collector, "<br/>",
+                               "Date collected: ", po$Date.collected, "<br/>",
+                               "Sex: ", po$Sex, "<br/>")) %>%
   addRasterImage(r[[5]], colors = p5, group="A. tenuis", opacity = 0.7) %>%
   addCircleMarkers(lat=te$lat, lng=te$lon, radius= rad, weight=wt, opacity=op, color=1, group="A. tenuis", fillOpacity = op, 
-                   popup=paste("source =",te$lab)) %>%
+                   popup=paste(sep="", 
+                               "<b><i>Aipysurus tenuis</i></b> <br/>",
+                               "Source: ", te$Source, "<br/>",
+                               "ID: ", te$ID, "<br/>",
+                               "Record Type: ", te$Record.Type, "<br/>",
+                               "Collector: ", te$Collector, "<br/>",
+                               "Date collected: ", te$Date.collected, "<br/>",
+                               "Sex: ", te$Sex, "<br/>")) %>%
   
   addLayersControl(
     #baseGroups = c("Map","Satellite"),
-    baseGroups = c("A. apraefrontalis", "A. foliosquama", "A. fuscus","A. pooleorum","A. tenuis"),
+    baseGroups = c("A. apraefrontalis", "A. foliosquama", "A. fuscus","A. l. pooleorum","A. tenuis"),
     options = layersControlOptions(collapsed = FALSE)) %>% 
   
   addMiniMap(tiles = providers$Esri.WorldStreetMap, toggleDisplay = TRUE,
