@@ -5,20 +5,11 @@ library(raster)
 library(rgeos)
 library(htmlwidgets)
 
-r<-stack(list.files("~/Documents/GitHub/SeaSnake-NicheModels/Data/Rasters", full.names = T)); projection(r)<-CRS("+proj=longlat +datum=WGS84")
-poly<-readShapeSpatial("~/Dropbox/Manuscripts/15. WA BRUVS/Data/WA rasters/NWMR/NWShelf.shp", proj4string = CRS("+proj=longlat +datum=WGS84"))
+r<-stack(list.files("Data/Rasters", full.names = T)); projection(r)<-CRS("+proj=longlat +datum=WGS84")
+poly<-readShapeSpatial("Data/NWMR/NWShelf.shp", proj4string = CRS("+proj=longlat +datum=WGS84"))
 
 data<-read_csv("Data/SS_occurences_2018-02-28.csv")
-data<-rbind(data, data.frame(source=c("ala"), lat=c(-18.01), lon=c(122.16), date=c("1988-04-01"), count=c(1), species=c("tenuis"), genus=c("Aipysurus")))
-data<-data[!data$source%in%"Ru_dataset",]
-data[data$source%in%"ala","lab"]<-"Atlas of Living Australia"
-data[data$source%in%c("QLDbruvs","WAbruvs"),"lab"]<-"BRUVs (AIMS)"
-data[data$source%in%"rls","lab"]<-"Reef Life Survey"
-data[data$source%in%c("Survey_Blanche"),"lab"]<-"Snorkel Survey (D'Anastasi,B)"
-data[data$source%in%c("Survey_Char","Survey_Kate"),"lab"]<-"Snorkel/Spotlight Survey (Sanders,K)"
-data[data$source%in%c("WAFish_14-16","WAFish_Char","WAFish_Nat07","WAFish_Nat17","WAFish_Nat17b"),"lab"]<-"Research Trawl Surveys (DoF,WA)"
-
-coordinates(data)<-~lon+lat; projection(data)<-CRS("+proj=longlat +datum=WGS84")
+coordinates(data)<-c("Longitude", "Latitude"); projection(data)<-CRS("+proj=longlat +datum=WGS84")
 
 all<-gIntersection(data, poly)
 ap<-data[data$species%in%"apraefrontalis",]; #apr<-rasterToPoints(rasterize(ap, r, field=1), spatial=T); apr@data[,"species"]<-"apr"
@@ -34,7 +25,7 @@ p3 <- colorNumeric(c("steelblue2","gold", "red"), values(r[[3]]),na.color = "tra
 p4 <- colorNumeric(c("steelblue2","gold", "red"), values(r[[4]]),na.color = "transparent")
 p5 <- colorNumeric(c("steelblue2","gold", "red"), values(r[[5]]),na.color = "transparent")
 
-rad=2
+rad=5
 op=1
 wt= 10
   
