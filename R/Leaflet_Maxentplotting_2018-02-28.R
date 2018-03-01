@@ -17,15 +17,16 @@ data<- all[poly,]
 ap<-data[data$species%in%"apraefrontalis",]
 fo<-data[data$species%in%"foliosquama",]
 fu<-data[data$species%in%"fuscus",]
-po<-data[data$species%in%"pooleorum",]
 te<-data[data$species%in%"tenuis",]
+la<-data[data$species%in%"laevis",]
+po<-data[data$species%in%"pooleorum",]
 
-p0 <- colorNumeric(c("steelblue2","gold", "red"), values(r[[6]]),na.color = "transparent")
 p1 <- colorNumeric(c("steelblue2","gold", "red"), values(r[[1]]),na.color = "transparent")
 p2 <- colorNumeric(c("steelblue2","gold", "red"), values(r[[2]]),na.color = "transparent")
 p3 <- colorNumeric(c("steelblue2","gold", "red"), values(r[[3]]),na.color = "transparent")
 p4 <- colorNumeric(c("steelblue2","gold", "red"), values(r[[4]]),na.color = "transparent")
 p5 <- colorNumeric(c("steelblue2","gold", "red"), values(r[[5]]),na.color = "transparent")
+p6 <- colorNumeric(c("steelblue2","gold", "red"), values(r[[6]]),na.color = "transparent")
 
 rad=3
 op=0.7
@@ -33,7 +34,7 @@ wt= 10
   
 maxentmap<-
   
-  leaflet() %>% addTiles() %>%
+  leaflet() %>%
   #addProviderTiles(providers$Esri.WorldStreetMap, group = "Map") %>% 
   addProviderTiles(providers$Esri.WorldImagery, group = "Satellite") %>%
   
@@ -70,17 +71,7 @@ maxentmap<-
                                "Collector: ", fu$Collector, "<br/>",
                                "Date collected: ", fu$Date.collected, "<br/>",
                                "Sex: ", fu$Sex, "<br/>")) %>%
-  addRasterImage(r[[4]], colors = p4, group="A. l. pooleorum", opacity = 0.7) %>%
-  addCircleMarkers(lat=po$Latitude, lng=po$Longitude, radius= rad, weight=wt, opacity=op, color=1, group="A. l. pooleorum", fillOpacity = op, 
-                   popup=paste(sep="", 
-                               "<b><i>Aipysurus laevis pooleorum</i></b> <br/>",
-                               "Source: ", po$Source, "<br/>",
-                               "ID: ", po$ID, "<br/>",
-                               "Record Type: ", po$Record.Type, "<br/>",
-                               "Collector: ", po$Collector, "<br/>",
-                               "Date collected: ", po$Date.collected, "<br/>",
-                               "Sex: ", po$Sex, "<br/>")) %>%
-  addRasterImage(r[[5]], colors = p5, group="A. tenuis", opacity = 0.7) %>%
+  addRasterImage(r[[4]], colors = p4, group="A. tenuis", opacity = 0.7) %>%
   addCircleMarkers(lat=te$Latitude, lng=te$Longitude, radius= rad, weight=wt, opacity=op, color=1, group="A. tenuis", fillOpacity = op, 
                    popup=paste(sep="", 
                                "<b><i>Aipysurus tenuis</i></b> <br/>",
@@ -90,10 +81,31 @@ maxentmap<-
                                "Collector: ", te$Collector, "<br/>",
                                "Date collected: ", te$Date.collected, "<br/>",
                                "Sex: ", te$Sex, "<br/>")) %>%
+  addRasterImage(r[[5]], colors = p5, group="A. l. laevis", opacity = 0.7) %>%
+  addCircleMarkers(lat=la$Latitude, lng=la$Longitude, radius= rad, weight=wt, opacity=op, color=1, group="A. l. laevis", fillOpacity = op, 
+                   popup=paste(sep="", 
+                               "<b><i>Aipysurus laevis laevis</i></b> <br/>",
+                               "Source: ", la$Source, "<br/>",
+                               "ID: ", la$ID, "<br/>",
+                               "Record Type: ", la$Record.Type, "<br/>",
+                               "Collector: ", la$Collector, "<br/>",
+                               "Date collected: ", la$Date.collected, "<br/>",
+                               "Sex: ", la$Sex, "<br/>")) %>%
+  addRasterImage(r[[6]], colors = p6, group="A. l. pooleorum", opacity = 0.7) %>%
+  addCircleMarkers(lat=po$Latitude, lng=po$Longitude, radius= rad, weight=wt, opacity=op, color=1, group="A. l. pooleorum", fillOpacity = op, 
+                   popup=paste(sep="", 
+                               "<b><i>Aipysurus laevis pooleorum</i></b> <br/>",
+                               "Source: ", po$Source, "<br/>",
+                               "ID: ", po$ID, "<br/>",
+                               "Record Type: ", po$Record.Type, "<br/>",
+                               "Collector: ", po$Collector, "<br/>",
+                               "Date collected: ", po$Date.collected, "<br/>",
+                               "Sex: ", po$Sex, "<br/>")) %>%
+  
   
   addLayersControl(
     #baseGroups = c("Map","Satellite"),
-    baseGroups = c("A. apraefrontalis", "A. foliosquama", "A. fuscus","A. l. pooleorum","A. tenuis"),
+    baseGroups = c("A. apraefrontalis", "A. foliosquama", "A. fuscus","A. tenuis","A. l. laevis","A. l. pooleorum"),
     options = layersControlOptions(collapsed = FALSE)) %>% 
   
   addMiniMap(tiles = providers$Esri.WorldStreetMap, toggleDisplay = TRUE,
@@ -103,7 +115,7 @@ maxentmap<-
             title = "Habitat Suitability", opacity=1) %>%
   
   
-  hideGroup(c("A. foliosquama", "A. fuscus","A. l. pooleorum","A. tenuis"))
+  hideGroup(c("A. foliosquama", "A. fuscus","A. tenuis","A. l. laevis","A. l. pooleorum"))
 
 
 saveWidget(maxentmap, file="maxentmap.html")
