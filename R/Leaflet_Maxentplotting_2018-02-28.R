@@ -27,8 +27,8 @@ p3 <- colorNumeric(c("steelblue2","gold", "red"), values(r[[3]]),na.color = "tra
 p4 <- colorNumeric(c("steelblue2","gold", "red"), values(r[[4]]),na.color = "transparent")
 p5 <- colorNumeric(c("steelblue2","gold", "red"), values(r[[5]]),na.color = "transparent")
 
-rad=5
-op=1
+rad=3
+op=0.7
 wt= 10
   
 maxentmap<-
@@ -41,7 +41,7 @@ maxentmap<-
   #addCircleMarkers(lat=all$lat, lng=all$lon, radius= rad, weight=wt, opacity=op, color=1, group="All sea snakes", fillOpacity=op, popup=paste("species =",all$genus,all$species," source =",all$lab)) %>%
   
   addRasterImage(r[[1]], colors = p1, group="A. apraefrontalis", opacity = 0.7) %>%
-  addCircleMarkers(lat=ap$lat, lng=ap$lon, radius= rad, weight=wt, opacity=op, color=1, group="A. apraefrontalis", fillOpacity=op, 
+  addCircleMarkers(lat=ap$Latitude, lng=ap$Longitude, radius= rad, weight=wt, opacity=op, color=1, group="A. apraefrontalis", fillOpacity=op, 
                    popup=paste(sep="", 
                                "<b><i>Aipysurus apraefrontalis</i></b> <br/>",
                                "Source: ", ap$Source, "<br/>",
@@ -51,7 +51,7 @@ maxentmap<-
                                "Date collected: ", ap$Date.collected, "<br/>",
                                "Sex: ", ap$Sex, "<br/>")) %>%
   addRasterImage(r[[2]], colors = p2, group="A. foliosquama", opacity = 0.7) %>%
-  addCircleMarkers(lat=fo$lat, lng=fo$lon, radius= rad, weight=wt, opacity=op, color=1, group="A. foliosquama", fillOpacity = op, 
+  addCircleMarkers(lat=fo$Latitude, lng=fo$Longitude, radius= rad, weight=wt, opacity=op, color=1, group="A. foliosquama", fillOpacity = op, 
                    popup=paste(sep="", 
                                "<b><i>Aipysurus foliosquama</i></b> <br/>",
                                "Source: ", fo$Source, "<br/>",
@@ -61,7 +61,7 @@ maxentmap<-
                                "Date collected: ", fo$Date.collected, "<br/>",
                                "Sex: ", fo$Sex, "<br/>")) %>%
   addRasterImage(r[[3]], colors = p3, group="A. fuscus",  opacity = 0.7) %>%
-  addCircleMarkers(lat=fu$lat, lng=fu$lon, radius= rad, weight=wt, opacity=op, color=1, group="A. fuscus", fillOpacity = op, 
+  addCircleMarkers(lat=fu$Latitude, lng=fu$Longitude, radius= rad, weight=wt, opacity=op, color=1, group="A. fuscus", fillOpacity = op, 
                    popup=paste(sep="", 
                                "<b><i>Aipysurus fuscus</i></b> <br/>",
                                "Source: ", fu$Source, "<br/>",
@@ -71,7 +71,7 @@ maxentmap<-
                                "Date collected: ", fu$Date.collected, "<br/>",
                                "Sex: ", fu$Sex, "<br/>")) %>%
   addRasterImage(r[[4]], colors = p4, group="A. l. pooleorum", opacity = 0.7) %>%
-  addCircleMarkers(lat=po$lat, lng=po$lon, radius= rad, weight=wt, opacity=op, color=1, group="A. l. pooleorum", fillOpacity = op, 
+  addCircleMarkers(lat=po$Latitude, lng=po$Longitude, radius= rad, weight=wt, opacity=op, color=1, group="A. l. pooleorum", fillOpacity = op, 
                    popup=paste(sep="", 
                                "<b><i>Aipysurus laevis pooleorum</i></b> <br/>",
                                "Source: ", po$Source, "<br/>",
@@ -81,7 +81,7 @@ maxentmap<-
                                "Date collected: ", po$Date.collected, "<br/>",
                                "Sex: ", po$Sex, "<br/>")) %>%
   addRasterImage(r[[5]], colors = p5, group="A. tenuis", opacity = 0.7) %>%
-  addCircleMarkers(lat=te$lat, lng=te$lon, radius= rad, weight=wt, opacity=op, color=1, group="A. tenuis", fillOpacity = op, 
+  addCircleMarkers(lat=te$Latitude, lng=te$Longitude, radius= rad, weight=wt, opacity=op, color=1, group="A. tenuis", fillOpacity = op, 
                    popup=paste(sep="", 
                                "<b><i>Aipysurus tenuis</i></b> <br/>",
                                "Source: ", te$Source, "<br/>",
@@ -102,7 +102,8 @@ maxentmap<-
   addLegend("bottomright", pal = p1, values = values(r[[1]]),
             title = "Habitat Suitability", opacity=1) %>%
   
-  hideGroup(c("A. foliosquama", "A. fuscus","A. pooleorum","A. tenuis"))
+  
+  hideGroup(c("A. foliosquama", "A. fuscus","A. l. pooleorum","A. tenuis"))
 
 
 saveWidget(maxentmap, file="maxentmap.html")
