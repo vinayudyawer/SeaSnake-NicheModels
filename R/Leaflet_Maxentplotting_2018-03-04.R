@@ -8,6 +8,9 @@ library(htmlwidgets)
 r<-stack(list.files("Data/Rasters", full.names = T)); projection(r)<-CRS("+proj=longlat +datum=WGS84")
 r<-dropLayer(r, 5)
 poly<-readShapeSpatial("Data/NWMR/NWShelf.shp", proj4string = CRS("+proj=longlat +datum=WGS84"))
+mpa<-crop(readShapeSpatial("Data/MPAs/capad_marine.shp", proj4string = CRS("+proj=longlat +datum=WGS84")), r)
+mpa_mp<-mpa[mpa$IUCN%in%c("IA","II"),]
+mpa_mu<-mpa[mpa$IUCN%in%c("III","IV","V","VI"),]
 
 all<-read.csv("Data/SS_occurences_2018-02-28.csv")
 coordinates(all)<-c("Longitude", "Latitude"); projection(all)<-CRS("+proj=longlat +datum=WGS84")
@@ -40,14 +43,14 @@ maxentmap<-
   leaflet() %>% addTiles() %>%
   addProviderTiles(providers$Esri.WorldImagery, group = "Satellite") %>%
   
-  addRasterImage(r[[1]], colors = p1, group="Aipysurus apraefrontalis", opacity = 0.7) %>%
-  addRasterImage(r[[2]], colors = p1, group="Aipysurus foliosquama", opacity = 0.7) %>%
-  addRasterImage(r[[3]], colors = p1, group="Aipysurus fuscus", opacity = 0.7) %>%
-  addRasterImage(r[[4]], colors = p1, group="Aipysurus tenuis", opacity = 0.7) %>%
+  addRasterImage(r[[1]], colors = p1, group="<i>Aipysurus apraefrontalis</i>", opacity = 0.7) %>%
+  addRasterImage(r[[2]], colors = p1, group="<i>Aipysurus foliosquama</i>", opacity = 0.7) %>%
+  addRasterImage(r[[3]], colors = p1, group="<i>Aipysurus fuscus</i>", opacity = 0.7) %>%
+  addRasterImage(r[[4]], colors = p1, group="<i>Aipysurus tenuis</i>", opacity = 0.7) %>%
   # addRasterImage(r[[5]], colors = p1, group="Aipysurus laevis laevis", opacity = 0.7) %>%
-  addRasterImage(r[[5]], colors = p1, group="Aipysurus laevis pooleorum", opacity = 0.7) %>%
+  addRasterImage(r[[5]], colors = p1, group="<i>Aipysurus laevis pooleorum</i>", opacity = 0.7) %>%
   
-  addCircleMarkers(lat=data$Latitude, lng=data$Longitude, radius= rad, weight=wt, opacity=op, color=1, group=data$spp, fillOpacity = op, 
+  addCircleMarkers(lat=data$Latitude, lng=data$Longitude, radius= rad, weight=wt, opacity=op, color=1, group=paste("<i>",data$spp,"</i>", sep=""), fillOpacity = op, 
                    popup=paste(sep="", 
                                "<b><i>", data$spp ,"</i></b> <br/>",
                                "Source: ", data$Source, "<br/>",
@@ -56,10 +59,12 @@ maxentmap<-
                                "Collector: ", data$Collector, "<br/>",
                                "Date collected: ", data$Date.collected, "<br/>",
                                "Sex: ", data$Sex, "<br/>")) %>%
-  
+  addPolygons(data=mpa_mp, color="#99CC00", weight=2, group="Marine Protected Areas") %>%
+  addPolygons(data=mpa_mu, color="#FFBA00", weight=2, group="Marine Protected Areas") %>%
   
   addLayersControl(
-    baseGroups = levels(data$spp),
+    baseGroups = paste("<i>",levels(data$spp),"</i>", sep=""),
+    overlayGroups = "Marine Protected Areas",
     options = layersControlOptions(collapsed = FALSE)) %>%
   
   addMiniMap(tiles = providers$Esri.WorldStreetMap, toggleDisplay = TRUE,
@@ -68,9 +73,11 @@ maxentmap<-
   addLegend("bottomright", pal = p1, values = values(r[[1]]),
             title = "Habitat Suitability", opacity=1) %>%
   
-  hideGroup(levels(data$spp)[-1])
+  hideGroup(c(paste("<i>",levels(data$spp),"</i>", sep="")[-1], "Marine Protected Areas"))
 
 
+
+maxentmap
 
 saveWidget(maxentmap, file="ModelMap.html")
 
