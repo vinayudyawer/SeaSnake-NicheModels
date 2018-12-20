@@ -15,6 +15,15 @@ mpa_mu<-mpa[mpa$IUCN%in%c("III","IV","V","VI"),]
 all<-read.csv("Data/SS_occurences_2018-02-28.csv")
 coordinates(all)<-c("Longitude", "Latitude"); projection(all)<-CRS("+proj=longlat +datum=WGS84")
 
+validation<-
+  read.csv("Data/Field Validation data/KimberlyPilbaraTrawls.csv") %>%
+  mutate(valid = 
+           case_when(
+             Species %in% "Aipysurus mosaicus" ~ 2,
+             !Species %in% "Aipysurus mosaicus" ~ 8
+             ))
+coordinates(validation)<-c("Longitude", "Latitude"); projection(validation)<-CRS("+proj=longlat +datum=WGS84")
+
 #data<-gIntersection(all, poly)
 data<- all[poly,]
 data<-data[!data$species%in%"laevis",]
@@ -59,8 +68,16 @@ maxentmap<-
                                "Collector: ", data$Collector, "<br/>",
                                "Date collected: ", data$Date.collected, "<br/>",
                                "Sex: ", data$Sex, "<br/>")) %>%
-  addPolygons(data=mpa_mp, color="#99CC00", weight=2, group="Marine Protected Areas") %>%
-  addPolygons(data=mpa_mu, color="#FFBA00", weight=2, group="Marine Protected Areas") %>%
+  addPolygons(data=mpa_mp, color="#99CC00", weight=2, group="Marine Protected Areas", 
+              popup=paste(sep="",
+                          "<b>", mpa_mp$NAME, "</b> <br/>",
+                          "<br/>", mpa_mp$TYPE,"<br/>", mpa_mp$COMMENTS,"<br/>"))%>%
+  addPolygons(data=mpa_mu, color="#FFBA00", weight=2, group="Marine Protected Areas",
+              popup=paste(sep="",
+                          "<b>", mpa_mu$NAME, "</b> <br/>",
+                          "<br/>", mpa_mu$TYPE,"<br/>", mpa_mu$COMMENTS,"<br/>"))%>%
+  addCircleMarkers(lat=validation$Latitude, lng=validation$Longitude, radius= rad, weight=wt, opacity=op, color=validation$valid, group="Field Validation", 
+                   fillOpacity = op, popup=paste(sep="", "<b><i>", validation$Species ,"</i></b> <br/>")) %>%
   
   addLayersControl(
     baseGroups = paste("<i>",levels(data$spp),"</i>", sep=""),
