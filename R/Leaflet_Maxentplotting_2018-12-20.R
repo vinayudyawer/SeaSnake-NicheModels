@@ -19,8 +19,8 @@ validation<-
   read.csv("Data/Field Validation data/KimberlyPilbaraTrawls.csv") %>%
   mutate(valid = 
            case_when(
-             Species %in% "Aipysurus mosaicus" ~ 2,
-             !Species %in% "Aipysurus mosaicus" ~ 8
+             Species %in% "Aipysurus mosaicus" ~ "red",
+             !Species %in% "Aipysurus mosaicus" ~ "grey"
              ))
 coordinates(validation)<-c("Longitude", "Latitude"); projection(validation)<-CRS("+proj=longlat +datum=WGS84")
 
@@ -43,9 +43,6 @@ p4 <- colorNumeric(c("steelblue2","gold", "red"), values(r[[4]]),na.color = "tra
 p5 <- colorNumeric(c("steelblue2","gold", "red"), values(r[[5]]),na.color = "transparent")
 # p6 <- colorNumeric(c("steelblue2","gold", "red"), values(r[[6]]),na.color = "transparent")
 
-rad=3
-op=0.7
-wt= 10
 
 maxentmap<-
   
@@ -59,7 +56,7 @@ maxentmap<-
   # addRasterImage(r[[5]], colors = p1, group="Aipysurus laevis laevis", opacity = 0.7) %>%
   addRasterImage(r[[5]], colors = p1, group="<i>Aipysurus laevis pooleorum</i>", opacity = 0.7) %>%
   
-  addCircleMarkers(lat=data$Latitude, lng=data$Longitude, radius= rad, weight=wt, opacity=op, color=1, group=paste("<i>",data$spp,"</i>", sep=""), fillOpacity = op, 
+  addCircleMarkers(lat=data$Latitude, lng=data$Longitude, radius= 2, weight=2, opacity=op, color=1, group=paste("<i>",data$spp,"</i>", sep=""), fillOpacity = op, 
                    popup=paste(sep="", 
                                "<b><i>", data$spp ,"</i></b> <br/>",
                                "Source: ", data$Source, "<br/>",
@@ -76,7 +73,8 @@ maxentmap<-
               popup=paste(sep="",
                           "<b>", mpa_mu$NAME, "</b> <br/>",
                           "<br/>", mpa_mu$TYPE,"<br/>", mpa_mu$COMMENTS,"<br/>"))%>%
-  addCircleMarkers(lat=validation$Latitude, lng=validation$Longitude, radius= rad, weight=wt, opacity=op, color=validation$valid, group="Field Validation", 
+  
+  addCircleMarkers(lat=validation$Latitude, lng=validation$Longitude, radius= 2, weight=2, opacity=1, color=validation$valid, group="Field Validation", 
                    fillOpacity = op, popup=paste(sep="", "<b><i>", validation$Species ,"</i></b> <br/>")) %>%
   
   addLayersControl(
