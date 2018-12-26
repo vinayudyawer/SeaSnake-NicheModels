@@ -19,10 +19,11 @@ validation<-
   read.csv("Data/Field Validation data/KimberlyPilbaraTrawls.csv") %>%
   mutate(valid = 
            case_when(
-             animal %in% "fuscus" ~ "darkgreen",
-             animal %in% "snake" ~ "dodgerblue3",
-             animal %in% "none" ~ "firebrick"
-             ))
+             animal %in% "fuscus" ~ "firebrick",
+             animal %in% "snake" ~ "grey",
+             animal %in% "none" ~ "grey"
+             )) %>%
+  arrange(desc(animal))
 coordinates(validation)<-c("Longitude", "Latitude"); projection(validation)<-CRS("+proj=longlat +datum=WGS84")
 
 #data<-gIntersection(all, poly)
@@ -84,7 +85,9 @@ maxentmap<-
     options = layersControlOptions(collapsed = FALSE)) %>%
   
   addMiniMap(tiles = providers$Esri.WorldStreetMap, toggleDisplay = TRUE,
-             position = "topleft") %>%
+             position = "bottomleft") %>%
+  
+  addMeasure("topleft", primaryLengthUnit = "meters", primaryAreaUnit = "sqmeters") %>%
   
   addLegend("bottomright", pal = p1, values = values(r[[1]]),
             title = "Habitat Suitability", opacity=1) %>%
